@@ -4,16 +4,30 @@ import {
   VStack,
   useTheme,
   Text,
-  Heading
+  Heading,
+  FlatList,
+  Center
 } from 'native-base'
-import { SignOut } from 'phosphor-react-native'
+import { ChatTeardropText, SignOut } from 'phosphor-react-native'
 import { useState } from 'react'
 
 import Logo from '../assets/logo_secondary.svg'
 import { Filter } from '../components/Filter'
+import { Button } from '../components/Button'
+import { Order, OrderProps } from '../components/Order'
 
 export function Home() {
-  const [ statusSelected, setStatusSelected ] = useState<'open' | 'closed'>('open')
+  const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>(
+    'open'
+  )
+  const [orders, setOrders] = useState<OrderProps[]>([
+    // {
+    //   id: '123',
+    //   patrimony: '123456789',
+    //   when: '19/07/2022 ás 11:30',
+    //   status: 'open'
+    // }
+  ])
   const { colors } = useTheme()
 
   return (
@@ -45,9 +59,38 @@ export function Home() {
         </HStack>
 
         <HStack space={3} mb={8}>
-          <Filter type="open" title="Em Andamento" onPress={() => setStatusSelected('open')} isActive={statusSelected === 'open'} />
-          <Filter type="closed" title="Finalizados" onPress={() => setStatusSelected('closed')} isActive={statusSelected === 'closed'} />
+          <Filter
+            type="open"
+            title="Em Andamento"
+            onPress={() => setStatusSelected('open')}
+            isActive={statusSelected === 'open'}
+          />
+          <Filter
+            type="closed"
+            title="Finalizados"
+            onPress={() => setStatusSelected('closed')}
+            isActive={statusSelected === 'closed'}
+          />
         </HStack>
+
+        <FlatList
+          data={orders}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          renderItem={({ item }) => <Order data={item} />}
+          ListEmptyComponent={()=> (
+            <Center>
+              <ChatTeardropText size={40} color={colors.gray[300]} />
+              <Text color="gray.200" fontSize='xl' mt={6} textAlign='center' >
+                Você ainda não possui {'\n'}
+                solicitações {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
+              </Text>
+            </Center>
+          )}
+        />
+
+        <Button title="Nova Solicitação" />
       </VStack>
     </VStack>
   )
