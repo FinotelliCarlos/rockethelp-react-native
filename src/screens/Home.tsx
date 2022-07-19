@@ -15,20 +15,43 @@ import Logo from '../assets/logo_secondary.svg'
 import { Filter } from '../components/Filter'
 import { Button } from '../components/Button'
 import { Order, OrderProps } from '../components/Order'
+import { useNavigation } from '@react-navigation/native'
 
 export function Home() {
   const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>(
     'open'
   )
   const [orders, setOrders] = useState<OrderProps[]>([
-    // {
-    //   id: '123',
-    //   patrimony: '123456789',
-    //   when: '19/07/2022 ás 11:30',
-    //   status: 'open'
-    // }
+    {
+      id: '123',
+      patrimony: '123456',
+      when: '19/07/2022 ás 14:00',
+      status: 'open' 
+    },
+    {
+      id: '456',
+      patrimony: '123456',
+      when: '19/07/2022 ás 14:00',
+      status: 'open' 
+    },
+    {
+      id: '789',
+      patrimony: '123456',
+      when: '19/07/2022 ás 14:00',
+      status: 'closed' 
+    }
   ])
+
+  const navigation = useNavigation()
   const { colors } = useTheme()
+
+  function handleNewOrder(){
+    navigation.navigate('new')
+  }
+
+  function handleOpenDetails(orderId: string){
+    navigation.navigate('details', {orderId})
+  }
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -54,8 +77,8 @@ export function Home() {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Heading color="gray.100">Meus chamados</Heading>
-          <Text color="gray.200">3</Text>
+          <Heading color="gray.100">Solicitações</Heading>
+          <Text color="gray.200">{orders.length}</Text>
         </HStack>
 
         <HStack space={3} mb={8}>
@@ -78,7 +101,7 @@ export function Home() {
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
-          renderItem={({ item }) => <Order data={item} />}
+          renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDetails(item.id)} />}
           ListEmptyComponent={()=> (
             <Center>
               <ChatTeardropText size={40} color={colors.gray[300]} />
@@ -90,7 +113,7 @@ export function Home() {
           )}
         />
 
-        <Button title="Nova Solicitação" />
+        <Button title="Nova Solicitação" onPress={handleNewOrder}/>
       </VStack>
     </VStack>
   )
