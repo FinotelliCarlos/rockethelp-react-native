@@ -1,6 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Alert } from 'react-native'
+
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import { useNavigation } from '@react-navigation/native'
+
 import {
   HStack,
   IconButton,
@@ -11,38 +15,23 @@ import {
   FlatList,
   Center
 } from 'native-base'
-import { ChatTeardropText, SignOut } from 'phosphor-react-native'
 
+import { ChatTeardropText, SignOut } from 'phosphor-react-native'
 import Logo from '../assets/logo_secondary.svg'
+
 import { Filter } from '../components/Filter'
 import { Button } from '../components/Button'
 import { Order, OrderProps } from '../components/Order'
-import { useNavigation } from '@react-navigation/native'
+
+import { dateFormat } from '../utils/firestoreDateFormat'
+import { Loading } from '../components/Loading'
 
 export function Home() {
+  const [loading, setLoading] = useState(true)
   const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>(
     'open'
   )
-  const [orders, setOrders] = useState<OrderProps[]>([
-    {
-      id: '123',
-      patrimony: '123456',
-      when: '19/07/2022 ás 14:00',
-      status: 'open'
-    },
-    {
-      id: '456',
-      patrimony: '123456',
-      when: '19/07/2022 ás 14:00',
-      status: 'open'
-    },
-    {
-      id: '789',
-      patrimony: '123456',
-      when: '19/07/2022 ás 14:00',
-      status: 'closed'
-    }
-  ])
+  const [orders, setOrders] = useState<OrderProps[]>([])
 
   const navigation = useNavigation()
   const { colors } = useTheme()
@@ -63,6 +52,34 @@ export function Home() {
         return Alert.alert('Sair', 'Não foi possivel sair.')
       })
   }
+
+  useEffect(() => {
+    setLoading(true)
+
+    const subscriber = firestore()
+      .collection('orders')
+      .where('status', '==', statusSelected)
+      .onSnapshot(snapshot => {
+        const data = snapshot.docs.map(doc => {
+          //percorrer dados recebidos após receber os mesmos da coleção informada em ".collection('orders')"
+          const { patrimony, description, status, created_at } = doc.data()
+
+          return {
+            //retornando dados formatador para variavel data
+            id: doc.id,
+            patrimony,
+            description,
+            status,
+            when: dateFormat(created_at)
+          }
+        })
+
+        setOrders(data)
+        setLoading(false)
+      })
+
+    return subscriber
+  }, [statusSelected])
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -110,25 +127,29 @@ export function Home() {
           />
         </HStack>
 
-        <FlatList
-          data={orders}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
-          renderItem={({ item }) => (
-            <Order data={item} onPress={() => handleOpenDetails(item.id)} />
-          )}
-          ListEmptyComponent={() => (
-            <Center>
-              <ChatTeardropText size={40} color={colors.gray[300]} />
-              <Text color="gray.200" fontSize="xl" mt={6} textAlign="center">
-                Você ainda não possui {'\n'}
-                solicitações{' '}
-                {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
-              </Text>
-            </Center>
-          )}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            data={orders}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            renderItem={({ item }) => (
+              <Order data={item} onPress={() => handleOpenDetails(item.id)} />
+            )}
+            ListEmptyComponent={() => (
+              <Center>
+                <ChatTeardropText size={40} color={colors.gray[300]} />
+                <Text color="gray.200" fontSize="xl" mt={6} textAlign="center">
+                  Você ainda não possui {'\n'}
+                  solicitações{' '}
+                  {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
+                </Text>
+              </Center>
+            )}
+          />
+        )}
 
         <Button title="Nova Solicitação" onPress={handleNewOrder} />
       </VStack>
