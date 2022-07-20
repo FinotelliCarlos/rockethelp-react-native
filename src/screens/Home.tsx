@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { Alert } from 'react-native'
+import auth from '@react-native-firebase/auth'
 import {
   HStack,
   IconButton,
@@ -9,7 +12,6 @@ import {
   Center
 } from 'native-base'
 import { ChatTeardropText, SignOut } from 'phosphor-react-native'
-import { useState } from 'react'
 
 import Logo from '../assets/logo_secondary.svg'
 import { Filter } from '../components/Filter'
@@ -26,31 +28,40 @@ export function Home() {
       id: '123',
       patrimony: '123456',
       when: '19/07/2022 ás 14:00',
-      status: 'open' 
+      status: 'open'
     },
     {
       id: '456',
       patrimony: '123456',
       when: '19/07/2022 ás 14:00',
-      status: 'open' 
+      status: 'open'
     },
     {
       id: '789',
       patrimony: '123456',
       when: '19/07/2022 ás 14:00',
-      status: 'closed' 
+      status: 'closed'
     }
   ])
 
   const navigation = useNavigation()
   const { colors } = useTheme()
 
-  function handleNewOrder(){
+  function handleNewOrder() {
     navigation.navigate('new')
   }
 
-  function handleOpenDetails(orderId: string){
-    navigation.navigate('details', {orderId})
+  function handleOpenDetails(orderId: string) {
+    navigation.navigate('details', { orderId })
+  }
+
+  function handleLogout() {
+    auth()
+      .signOut()
+      .catch(err => {
+        console.log(err)
+        return Alert.alert('Sair', 'Não foi possivel sair.')
+      })
   }
 
   return (
@@ -66,7 +77,10 @@ export function Home() {
       >
         <Logo />
 
-        <IconButton icon={<SignOut size={26} color={colors.gray[300]} />} />
+        <IconButton
+          icon={<SignOut size={26} color={colors.gray[300]} />}
+          onPress={handleLogout}
+        />
       </HStack>
 
       <VStack flex={1} px={6}>
@@ -101,19 +115,22 @@ export function Home() {
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
-          renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDetails(item.id)} />}
-          ListEmptyComponent={()=> (
+          renderItem={({ item }) => (
+            <Order data={item} onPress={() => handleOpenDetails(item.id)} />
+          )}
+          ListEmptyComponent={() => (
             <Center>
               <ChatTeardropText size={40} color={colors.gray[300]} />
-              <Text color="gray.200" fontSize='xl' mt={6} textAlign='center' >
+              <Text color="gray.200" fontSize="xl" mt={6} textAlign="center">
                 Você ainda não possui {'\n'}
-                solicitações {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
+                solicitações{' '}
+                {statusSelected === 'open' ? 'em andamento' : 'finalizadas'}
               </Text>
             </Center>
           )}
         />
 
-        <Button title="Nova Solicitação" onPress={handleNewOrder}/>
+        <Button title="Nova Solicitação" onPress={handleNewOrder} />
       </VStack>
     </VStack>
   )
