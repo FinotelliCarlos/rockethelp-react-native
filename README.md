@@ -29,54 +29,43 @@ Trata-se de uma plataforma que possibilita o usuario membro de uma empresa a abr
 
 ⚡ <strong>#Preview do aplicativo.</strong>
 
-<div align="center" style="display: flex; flex-wrap: wrap; align-itens: center; justify-content: center; gap: 1rem;">
-  <br>
-  <br>
+<div align="center" style="display: flex; flex-wrap: wrap; align-itens: center; justify-content: center; gap: 1rem; padding: 1rem;">
 
-  <div>
+  <div style="max-width: 250px; width: 100%; border-right: 3px solid #fff; padding-inline: 1rem; border-radius: 10px;">
     <span>
       No projeto foi realizado tratamento de autenticação de usuario com Firebase
     </span> 
     <br>
     <br>
-    <img width="200px" src="preview/signin.gif" />
+    <img style="border-radius: 15px;" width="240px" src="preview/signin.gif" />
   </div>
 
-  <br>
-  <br>
-
-  <div>
+  <div style="max-width: 250px; border-right: 3px solid #fff; padding-inline: 1rem; border-radius: 10px;">
     <span>
       Foi criado o metodo de criação de novas solicitações.
-    </span> 
+    </span>
     <br>
     <br>
-      <img width="200px" src="preview/register.gif" />
+      <img style="border-radius: 15px;" width="240px" src="preview/register.gif" />
   </div>
-    <br>
-    <br>
 
-  <div>
+  <div style="max-width: 250px; border-right: 3px solid #fff; padding-inline: 1rem; border-radius: 10px;">
     <span>
       É possivel visualizar os detalhes da solicitação e encerrar a mesma.
     </span> 
     <br>
     <br>
-    <img width="200px" src="preview/details.gif" />
+    <img style="border-radius: 15px;" width="240px" src="preview/details.gif" />
   </div>
-    <br>
-    <br>
 
-  <div>
+  <div style="max-width: 250px; border-right: 3px solid #fff; padding-inline: 1rem; border-radius: 10px;">
     <span>
     Todos os dados são espelhados em tempo real.
     </span> 
     <br>
     <br>
-    <img width="200px" src="preview/realtime.gif" />
+    <img style="border-radius: 15px;" width="240px" src="preview/realtime.gif" />
   </div>
-    <br>
-    <br>
 
 </div>
 </div>
