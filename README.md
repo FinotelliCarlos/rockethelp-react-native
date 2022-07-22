@@ -101,8 +101,8 @@ cd rockethelp-react-native
 npm install
 
 # Executar o servidor
-expo run:android
+expo start
 
 ```
 
-## </div>
+</div>
