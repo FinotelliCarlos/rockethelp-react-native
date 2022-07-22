@@ -115,5 +115,5 @@ dist/
 
 # @end expo-cli
 
-*google-services.json
-*GoogleService-Info.plist
+google-services.json
+GoogleService-Info.plist
