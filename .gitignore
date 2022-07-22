@@ -115,5 +115,10 @@ dist/
 
 # @end expo-cli
 
+<<<<<<< HEAD
 google-services.json
 GoogleService-Info.plist
+=======
+GoogleService-Info.plist
+google-services.json
+>>>>>>> 6e8a6266ff2b7f3d015c615ca6c877e652c9e94b
